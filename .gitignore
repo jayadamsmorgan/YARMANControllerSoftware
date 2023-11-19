@@ -1,0 +1,9 @@
+.pio
+.clang_complete
+.gcc-flags.json
+.ccls
+.DS_Store
+.cache/
+.pio/
+lib/Adafruit*
+compile_commands.json

@@ -1,0 +1,3 @@
+Import("env")
+
+env["COMPILATIONDB_INCLUDE_TOOLCHAIN"] = True
