@@ -2,6 +2,7 @@
 #include "Logging.hpp"
 
 void begin_gpio() {
+  LOG("GPIO_SETUP: Setting up...");
   analogReadResolution(ADC_RES);
   analogWriteResolution(DAC_RES);
   analogWriteFrequency(DAC_FREQ);
@@ -17,4 +18,5 @@ void begin_gpio() {
   #ifdef PIN_RESTART
   pinMode(PIN_RESTART, INPUT_PULLUP);
   #endif // PIN_RESTART
+  LOG("GPIO_SETUP: Done setting up.");
 }

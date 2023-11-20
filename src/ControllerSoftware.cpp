@@ -1,13 +1,15 @@
 #include "Arduino.h"
 #include "BLE.hpp"
-#include "View.hpp"
+#include "Display.hpp"
 
 void setup() {
+  LOG("SETUP: Booting...");
   begin_gpio();
   begin_power();
   #ifdef DEBUG
   begin_logging();
   #endif
+  begin_display();
   begin_handle();
   begin_ble();
   #ifdef DEBUG
@@ -20,6 +22,7 @@ void setup() {
     }
   }
   #endif // DEBUG
+  LOG("SETUP: Device booted successfully");
   osThreadExit();
 }
 

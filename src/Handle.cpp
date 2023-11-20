@@ -17,11 +17,14 @@ void handle_thread(void*) {
 }
 
 void begin_handle() {
+  LOG("HANDLE_SETUP: Setting up...");
+  LOGCAT("HANDLE_SETUP: PIN_HANDLE:", PIN_HANDLE);
   handle_thread_id = osThreadNew(handle_thread, NULL, NULL);
   if (handle_thread_id == NULL) {
     LOGERR("HANDLE_SETUP: Cannot create handle thread.");
     ERR_HDL_THR_START();
     STOP();
   }
+  LOG("HANDLE_SETUP: Done setting up.");
 }
 

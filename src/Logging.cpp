@@ -17,7 +17,7 @@ void log_msg(const String& str) {
 
 void logging_thread(void*) {
   String buffer;
-  Serial.println("LOG_THR: Started.");
+  LOG("LOGGING_THREAD: Started.");
   while (true) {
     if (logging_queue.isEmpty()) {
       osDelay(100);
@@ -32,21 +32,23 @@ void logging_thread(void*) {
 }
 
 void begin_logging() {
+  LOG("LOGGING_SETUP: Setting up...");
   Serial.begin(SERIAL_BAUD);
   while (!Serial) { }
   logging_queue_mtx = osMutexNew(NULL);
   if (logging_queue_mtx == NULL) {
-    Serial.println("ERROR: LOG_STP: Cannot create logging queue mutex.");
+    Serial.println("ERROR: LOGGING_SETUP: Cannot create logging queue mutex.");
     ERR_LOG_QUE_INIT();
     startup_error = true;
     return;
   }
   loggingThreadId = osThreadNew(logging_thread, NULL, NULL);
   if (loggingThreadId == NULL) {
-    Serial.println("ERROR: LOG_STP: Cannot create logging thread.");
+    Serial.println("ERROR: LOGGING_SETUP: Cannot create logging thread.");
     ERR_LOG_THR_START();
     startup_error = true;
   }
+  LOG("LOGGING_SETUP: Done setting up.");
 }
 
 #endif // DEBUG

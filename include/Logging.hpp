@@ -12,7 +12,7 @@
 
 #define LOG(MSG)        log_msg(String(MSG))
 #define LOGCAT(MSG,VAL) LOG(String(MSG) + " '" + String(VAL) + "'.")
-#define LOGERR(MSG)     LOGCAT("ERROR:", MSG)
+#define LOGERR(MSG)     LOG(String("ERROR: ") + String(MSG))
 
 void begin_logging();
 static osThreadId_t loggingThreadId;
