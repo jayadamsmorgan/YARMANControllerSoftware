@@ -45,6 +45,28 @@ void read_temperature_thread(void*) {
 }
 #endif // DEBUG && NO_TEMP_THR
 
+void read_co_battery_thread(void*) {
+  LOG("CONTROLLER_BATTERY_THREAD: Started.");
+  while (true) {
+    co_battery_percentage = get_co_battery_percentage();
+    #ifdef DEBUG
+    if (is_co_charging()) {
+      LOG("CONTROLLER_BATTERY_THREAD: Battery is charging.");
+    } else {
+      LOG("CONTROLLER_BATTERY_THREAD: Battery is not charging.");
+    }
+    #endif // DEBUG
+    LOG("CONTROLLER_BATTERY_THREAD: Battery: "
+        + String(co_battery_percentage) + "%");
+    osDelay(BATT_PERCENTAGE_THREAD_DELAY);
+  }
+}
+
+uint8_t get_co_battery_percentage() {
+  // TODO: get BMS data
+  return 55;
+}
+
 bool is_co_charging() {
   return digitalRead(PIN_IS_CHARGING) == 1;
 }
@@ -75,6 +97,11 @@ void begin_power() {
     startup_error = true;
   }
   #endif
+  if (osThreadNew(read_co_battery_thread, NULL, NULL) == NULL) {
+    LOGERR("POWER_SETUP: Cannot start controller battery percentage thread.");
+    ERR_BATT_THR_START();
+    startup_error = true;
+  }
   LOG("POWER_SETUP: Done setting up.");
 }
 

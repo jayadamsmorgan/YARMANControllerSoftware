@@ -42,6 +42,7 @@ void begin_logging() {
     startup_error = true;
     return;
   }
+  LOG("LOGGING_SETUP: Logging queue created.");
   loggingThreadId = osThreadNew(logging_thread, NULL, NULL);
   if (loggingThreadId == NULL) {
     Serial.println("ERROR: LOGGING_SETUP: Cannot create logging thread.");

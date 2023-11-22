@@ -1,29 +1,29 @@
-#ifndef STRINGQUEUE_HPP
-#define STRINGQUEUE_HPP
+#ifndef VIEWQUEUE_HPP
+#define VIEWQUEUE_HPP
 
-#include "Arduino.h"
+#include "View.hpp"
 
-struct StringNode {
-    String data;
-    StringNode* next;
+struct ViewNode {
+    View data;
+    ViewNode* next;
 
-    StringNode(String d) : data(d), next(nullptr) {}
+    ViewNode(View d) : data(d), next(nullptr) {}
 };
 
-class StringQueue {
+class ViewQueue {
 private:
-    StringNode* front;
-    StringNode* rear;
+    ViewNode* front;
+    ViewNode* rear;
 
 public:
-    StringQueue() : front(nullptr), rear(nullptr) {}
+    ViewQueue() : front(nullptr), rear(nullptr) {}
 
     bool isEmpty() const {
         return front == nullptr;
     }
 
-    void enqueue(String data) {
-        StringNode* newNode = new StringNode(data);
+    void enqueue(View data) {
+        ViewNode* newNode = new ViewNode(data);
         if (rear == nullptr) {
             front = rear = newNode;
             return;
@@ -36,7 +36,7 @@ public:
         if (isEmpty()) {
             return false;
         }
-        StringNode* temp = front;
+        ViewNode* temp = front;
         front = front->next;
 
         if (front == nullptr) {
@@ -47,7 +47,7 @@ public:
         return true;
     }
 
-    bool getFront(String& ptr) const {
+    bool getFront(View& ptr) const {
         if (isEmpty()) {
             return false;
         }
@@ -55,11 +55,11 @@ public:
         return true;
     }
 
-    ~StringQueue() {
+    ~ViewQueue() {
         while (!isEmpty()) {
             dequeue();
         }
     }
 };
 
-#endif // STRINGQUEUE_HPP
+#endif // VIEWQUEUE_HPP

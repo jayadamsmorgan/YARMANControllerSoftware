@@ -15,8 +15,14 @@
 #define ERR_DFU_THR_START()             LED_IND_ERROR(3, 1)
 #define ERR_RST_THR_START()             LED_IND_ERROR(3, 2)
 #define ERR_TEMP_THR_START()            LED_IND_ERROR(3, 3)
+#define ERR_BATT_THR_START()            LED_IND_ERROR(3, 4)
 
 #define ERR_HDL_THR_START()             LED_IND_ERROR(4, 1)
+
+#define ERR_DISP_INIT()                 LED_IND_ERROR(5, 1)
+#define ERR_VIEW_QUE_INIT()             LED_IND_ERROR(5, 2)
+#define ERR_GUI_THR_START()             LED_IND_ERROR(5, 3)
+#define ERR_VIEW_THR_START()            LED_IND_ERROR(5, 4)
 
 #define LED_IND_ERROR(LONG, SHORT)    led_indication_error(LONG, SHORT)
 
