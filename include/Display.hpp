@@ -24,5 +24,5 @@ void view_thread(void*);
 
 void begin_display();
 
-#endif // DISPLAY_HPP
+#endif // !DISPLAY_HPP
 

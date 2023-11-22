@@ -16,4 +16,4 @@ void handle_thread(void*);
 
 void begin_handle();
 
-#endif // HANDLE_HPP
+#endif // !HANDLE_HPP

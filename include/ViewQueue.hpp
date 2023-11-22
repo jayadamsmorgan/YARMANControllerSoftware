@@ -62,4 +62,4 @@ public:
     }
 };
 
-#endif // VIEWQUEUE_HPP
+#endif // !VIEWQUEUE_HPP

@@ -45,7 +45,7 @@ BLECharacteristic co_temperature_characteristic(
   CO_TEMPERATURE_CHARACTERISTIC_PROP,
   STM32WB.readTemperature()
 );
-#endif // DEBUG && NO_TEMP_THR
+#endif // DEBUG && !NO_TEMP_THR
 
 BLEService co_data_service(CO_DATA_SERVICE_UUID);
 BLECharacteristic co_data_characteristic(
@@ -80,7 +80,7 @@ void ble_thread(void *) {
       old_temperature = co_temperature;
       LOG("BLE_THREAD: co_temperature written.");
     }
-    #endif // DEBUG && NO_TEMP_THR
+    #endif // DEBUG && !NO_TEMP_THR
     // TODO: Go to sleep once values dont change over some period of time.
 
     if (is_lb_charging_characteristic.written()) {
@@ -132,10 +132,10 @@ void begin_ble() {
     .addCharacteristic(is_lb_charging_characteristic);
   longboard_state_service
     .addCharacteristic(lb_battery_percentage_characteristic);
-#if defined(DEBUG) && !defined(NO_TEMP_THR)
+  #if defined(DEBUG) && !defined(NO_TEMP_THR)
   controller_state_service
     .addCharacteristic(co_temperature_characteristic);
-#endif // DEBUG && NO_TEMP_THR
+  #endif // DEBUG && !NO_TEMP_THR
   BLE.addService(handle_service);
   BLE.addService(co_data_service);
   BLE.addService(controller_state_service);

@@ -1,7 +1,21 @@
 #include "View.hpp"
 
 View::View(uint8_t width, uint8_t height) : width(width), height(height) {
+  x = 0;
+  y = 0;
   pixels = new uint8_t[(width * height + 7) / 8]{};
+}
+
+View::View(uint8_t width, uint8_t height, uint8_t x, uint8_t y) : 
+  width(width), height(height), x(x), y(y) {
+  pixels = new uint8_t[(width * height + 7) / 8]{};
+}
+
+View::View(uint8_t width, uint8_t height, uint8_t pixels[]) :
+  width(width), height(height) {
+  x = 0;
+  y = 0;
+  this->pixels = (uint8_t*) pixels;
 }
 
 View::View(uint8_t width, uint8_t height, uint8_t x, uint8_t y, uint8_t pixels[])
@@ -44,3 +58,8 @@ void View::render(Adafruit_SSD1306& display) {
   display.drawBitmap(x, y, pixels, width, height, 1);
   display.display();
 }
+
+void View::clearPixels() {
+  memset(pixels, 0, (width * height + 7) / 8);
+}
+

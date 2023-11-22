@@ -21,24 +21,21 @@ void add_view(View view) {
 void view_thread(void*) {
   LOG("VIEW_THREAD: Started.");
   osDelay(DISPLAY_LOGO_MS);
-  View controller_battery_view(
+  View battery_view(
     BATTERY_LOGO_WIDTH,
     BATTERY_LOGO_HEIGHT,
-    CO_BATTERY_LOGO_X,
-    CO_BATTERY_LOGO_Y,
-    battery_bmp
-  );
-  View longboard_battery_view(
-    BATTERY_LOGO_WIDTH,
-    BATTERY_LOGO_HEIGHT,
-    LB_BATTERY_LOGO_X,
-    LB_BATTERY_LOGO_Y,
     battery_bmp
   );
   while (true) {
     View mainView(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-    mainView += controller_battery_view;
-    mainView += longboard_battery_view;
+
+    // Add batteries to the view
+    mainView += battery_view;
+    battery_view.x = LB_BATTERY_LOGO_X;
+    battery_view.y = LB_BATTERY_LOGO_Y;
+    mainView += battery_view;
+
+    // Get percentage and add battery splits to battery logo
     float battery_percentage = get_co_battery_percentage();
     // 0-100 -> 0-BATTERY_SPLITS
     uint8_t battery_splits_count = (battery_percentage / 100) * BATTERY_SPLITS;
@@ -52,6 +49,17 @@ void view_thread(void*) {
       );
       mainView += batt_split_view;
     }
+    // Add actual percentage right after battery logo
+    View battery_percentage_view =
+      get_percentage_view(
+        battery_percentage,
+        CO_BATTERY_LOGO_X + BATTERY_LOGO_WIDTH + CHAR_SPACING_MAX,
+        CO_BATTERY_LOGO_Y);
+    mainView += battery_percentage_view;
+
+    // Same goes for longboard battery:
+    // P.S. might change appearance of LB Battery as it probably should be larger.
+    // TODO: add some signs or smth else to distiguish controller and lb battery statuses. 
     battery_percentage = lb_battery_percentage;
     battery_splits_count = (battery_percentage / 100) * BATTERY_SPLITS;
     for (auto i = 0; i < battery_splits_count; i++) {
@@ -64,6 +72,12 @@ void view_thread(void*) {
       );
       mainView += batt_split_view;
     }
+    battery_percentage_view =
+      get_percentage_view(
+        battery_percentage,
+        LB_BATTERY_LOGO_X + BATTERY_LOGO_WIDTH + CHAR_SPACING_MAX,
+        LB_BATTERY_LOGO_Y);
+    mainView += battery_percentage_view;
     add_view(mainView);
     osDelay(VIEW_THREAD_DELAY);
   }

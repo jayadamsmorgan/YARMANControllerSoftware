@@ -2,6 +2,7 @@
 #define VIEWS_HPP
 
 #include "Arduino.h"
+#include "View.hpp"
 
 // 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 // 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -152,6 +153,17 @@ BITMAP_T zero_bmp[] = {
   0b01111111
 };
 
+BITMAP_T percentage_bmp[] = {
+  0b11000011,
+  0b11000110,
+  0b00001100,
+  0b00011000,
+  0b00110000,
+  0b01100000,
+  0b11000110,
+  0b10000110,
+};
+
 #define LOGO_WIDTH 16
 #define LOGO_HEIGHT 16
 BITMAP_T logo_bmp[] = {
@@ -202,31 +214,115 @@ BITMAP_T battery_split_bmp[] = {
   0b10000000
 };
 
-static uint8_t* getDigitBitmap(uint8_t num) {
+static View getPercentageCharView() {
+  return View(CHAR_WIDTH, CHAR_HEIGHT, 0, 0, percentage_bmp);
+}
+
+static View getDigitView(uint8_t num) {
   switch (num) {
     case 0:
-      return zero_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, zero_bmp);
     case 1:
-      return one_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, one_bmp);
     case 2:
-      return two_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, two_bmp);
     case 3:
-      return three_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, three_bmp);
     case 4:
-      return four_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, four_bmp);
     case 5:
-      return five_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, five_bmp);
     case 6:
-      return six_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, six_bmp);
     case 7:
-      return seven_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, seven_bmp);
     case 8:
-      return eight_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, eight_bmp);
     case 9:
-      return nine_bmp;
+      return View(
+        CHAR_WIDTH,
+        CHAR_HEIGHT,
+        0, 0, nine_bmp);
     default:
       return NULL;
   }
 }
 
-#endif // VIEWS_HPP
+static View get_percentage_view(float percentage, uint8_t x, uint8_t y) {
+  if (percentage < 0) {
+    percentage = 0;
+  }
+  if (percentage > 100) {
+    percentage = 100;
+  }
+  View battery_percentage_view(
+    CHAR_WIDTH * 4 + CHAR_SPACING_MIN * 3,
+    CHAR_HEIGHT, x, y
+  );
+  View percentage_char_view = getPercentageCharView();
+  percentage_char_view.y = battery_percentage_view.y;
+  if (percentage == 100) {
+    View oneView = getDigitView(1);
+    oneView.x = battery_percentage_view.x;
+    oneView.y = battery_percentage_view.y;
+    battery_percentage_view += oneView;
+    View zeroView = getDigitView(0);
+    zeroView.x = oneView.x + CHAR_WIDTH + CHAR_SPACING_MIN;
+    zeroView.y = oneView.y;
+    battery_percentage_view += zeroView;
+    zeroView.x = zeroView.x + CHAR_WIDTH + CHAR_SPACING_MIN;
+    battery_percentage_view += zeroView;
+    percentage_char_view.x = zeroView.x + CHAR_WIDTH + CHAR_SPACING_MIN;
+    battery_percentage_view += percentage_char_view;
+  } else if (percentage > 9) {
+    uint8_t firstDigit = (uint8_t) (percentage - 5) / 10;
+    uint8_t secondDigit = ((uint8_t) percentage) % 10;
+    View firstDigitView = getDigitView(firstDigit);
+    View secondDigitView = getDigitView(secondDigit);
+    firstDigitView.x = battery_percentage_view.x;
+    firstDigitView.y = battery_percentage_view.y;
+    battery_percentage_view += firstDigitView;
+    secondDigitView.x = firstDigitView.x + CHAR_WIDTH + CHAR_SPACING_MIN;
+    secondDigitView.y = firstDigitView.y;
+    battery_percentage_view += secondDigitView;
+    percentage_char_view.x = secondDigitView.x + CHAR_WIDTH + CHAR_SPACING_MIN;
+    battery_percentage_view += percentage_char_view;
+  } else {
+    View digitView = getDigitView(percentage);
+    digitView.x = battery_percentage_view.x;
+    digitView.y = battery_percentage_view.y;
+    battery_percentage_view += digitView;
+    percentage_char_view.x = digitView.x + CHAR_WIDTH + CHAR_SPACING_MIN;
+    battery_percentage_view += digitView;
+  }
+  return percentage;
+}
+
+#endif // !VIEWS_HPP

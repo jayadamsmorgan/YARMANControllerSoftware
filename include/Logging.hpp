@@ -8,7 +8,7 @@
 
 #if defined(DEBUG) && !defined(SERIAL_BAUD)
 #define SERIAL_BAUD             115200
-#endif // DEBUG && SERIAL_BAUD
+#endif // DEBUG && !SERIAL_BAUD
 
 #define LOG(MSG)        log_msg(String(MSG))
 #define LOGCAT(MSG,VAL) LOG(String(MSG) + " '" + String(VAL) + "'.")
@@ -27,5 +27,5 @@ void logging_task(void*);
 
 #endif // DEBUG
 
-#endif // LOGGING_H
+#endif // !LOGGING_H
 

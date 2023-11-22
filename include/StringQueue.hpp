@@ -62,4 +62,4 @@ public:
     }
 };
 
-#endif // STRINGQUEUE_HPP
+#endif // !STRINGQUEUE_HPP

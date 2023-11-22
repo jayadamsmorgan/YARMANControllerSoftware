@@ -43,4 +43,4 @@ void led_indication_static_thr(void*);
 void begin_indication();
 
 
-#endif // INDICATION
+#endif // !INDICATION
