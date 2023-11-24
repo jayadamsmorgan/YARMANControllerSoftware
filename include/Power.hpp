@@ -6,11 +6,11 @@
 #define STOP()            while (1) { osDelay(1); }
 
 #ifdef PIN_RESTART
-void restart_thread(void*);
+void restart_isr();
 #endif
 
 #ifdef PIN_ENTER_DFU
-void dfu_enter_thread(void*);
+void dfu_enter_isr();
 #endif
 
 #if defined(DEBUG) && !defined(NO_TEMP_THR)
